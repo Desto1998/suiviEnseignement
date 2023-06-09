@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enseignants;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class EnseignantsController extends Controller
 {
     //
-
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -17,81 +17,81 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $data = Enseignants::all();
         return response()->json([
             'status' => 'success',
-            'users' => $users,
+            'data' => $data,
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
             'email' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
             'matricule' => 'required|string|max:255',
             'tel' => 'required|max:255',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
+        $data = Enseignants::create([
+            'nom' => $request->nom,
             'email' => $request->email,
-            'password' => $request->password,
+            'prenom' => $request->prenom,
             'matricule' => $request->matricule,
             'tel' => $request->tel,
         ]);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
+            'message' => 'Enseignant created successfully',
+            'enseignant' => $data,
         ]);
     }
 
     public function show($id)
     {
-        $todo = User::find($id);
+        $enseignant = Enseignants::find($id);
         return response()->json([
             'status' => 'success',
-            'todo' => $todo,
+            'enseignant' => $enseignant,
         ]);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
             'email' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
             'matricule' => 'required|string|max:255',
             'tel' => 'required|max:255',
         ]);
 
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->matricule = $request->matricule;
-        $user->tel = $request->tel;
-        $user->save();
+        $enseignant = User::find($id);
+        $enseignant->nom = $request->nom;
+        $enseignant->email = $request->email;
+        $enseignant->prenom = $request->prenom;
+        $enseignant->matricule = $request->matricule;
+        $enseignant->tel = $request->tel;
+        $enseignant->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'User updated successfully',
-            'user' => $user,
+            'message' => 'Enseignant updated successfully',
+            'enseignant' => $enseignant,
         ]);
     }
 
     public function destroy($id)
     {
-        $user = User::find($id);
-        $user->delete();
+        $enseignant = Enseignants::find($id);
+        $enseignant->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'User deleted successfully',
-            'user' => $user,
+            'message' => 'Enseignant deleted successfully',
+            'enseignant' => $enseignant,
         ]);
     }
 }

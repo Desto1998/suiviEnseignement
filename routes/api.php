@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EnseignantsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,9 +30,17 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('todos', 'index');
-    Route::post('todo', 'store');
-    Route::get('todo/{id}', 'show');
-    Route::put('todo/{id}', 'update');
-    Route::delete('todo/{id}', 'destroy');
+    Route::get('users', 'index');
+    Route::post('user', 'store');
+    Route::get('user/{id}', 'show');
+    Route::put('user/{id}', 'update');
+    Route::delete('user/{id}', 'destroy');
+});
+
+Route::controller(EnseignantsController::class)->group(function () {
+    Route::get('enseignants', 'index');
+    Route::post('enseignant', 'store');
+    Route::get('enseignant/{id}', 'show');
+    Route::put('enseignant/{id}', 'update');
+    Route::delete('enseignant/{id}', 'destroy');
 });
