@@ -30,7 +30,7 @@ class UserController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
         ]);
-dd($request);
+
         $todo = User::create([
             'name' => $request->name,
             'email' => $request->email,
