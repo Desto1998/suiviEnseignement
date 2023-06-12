@@ -1,8 +1,14 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CoursController;
 use App\Http\Controllers\EnseignantsController;
+use App\Http\Controllers\FilieresController;
+use App\Http\Controllers\HistoriquesController;
+use App\Http\Controllers\ProgrammerController;
+use App\Http\Controllers\SallesController;
 use App\Http\Controllers\UserController;
+use App\Models\Matieres;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +49,49 @@ Route::controller(EnseignantsController::class)->group(function () {
     Route::get('enseignant/{id}', 'show');
     Route::put('enseignant/{id}', 'update');
     Route::delete('enseignant/{id}', 'destroy');
+});
+
+Route::controller(FilieresController::class)->group(function () {
+    Route::get('filieres', 'index');
+    Route::post('filiere', 'store');
+    Route::get('filiere/{id}', 'show');
+    Route::put('filiere/{id}', 'update');
+    Route::delete('filiere/{id}', 'destroy');
+});
+
+Route::controller(Matieres::class)->group(function () {
+    Route::get('matieres', 'index');
+    Route::post('matiere', 'store');
+    Route::get('matiere/{id}', 'show');
+    Route::put('matiere/{id}', 'update');
+    Route::delete('matiere/{id}', 'destroy');
+});
+
+Route::controller(SallesController::class)->group(function () {
+    Route::get('salles', 'index');
+    Route::post('salle', 'store');
+    Route::get('salle/{id}', 'show');
+    Route::put('salle/{id}', 'update');
+    Route::delete('salle/{id}', 'destroy');
+});
+
+Route::controller(CoursController::class)->group(function () {
+    Route::get('cours', 'index');
+    Route::post('cours', 'store');
+    Route::get('cours/{id}', 'show');
+    Route::put('cours/{id}', 'update');
+    Route::delete('cours/{id}', 'destroy');
+});
+
+Route::controller(ProgrammerController::class)->group(function () {
+    Route::get('programmer', 'index');
+    Route::post('programmer', 'store');
+    Route::get('programmer/{id}', 'show');
+    Route::put('programmer/{id}', 'update');
+    Route::delete('programmer/{id}', 'destroy');
+});
+
+Route::controller(HistoriquesController::class)->group(function () {
+    Route::get('historiques', 'index');
+    Route::delete('historiques/{id}', 'destroy');
 });

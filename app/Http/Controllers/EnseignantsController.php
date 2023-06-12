@@ -17,7 +17,7 @@ class EnseignantsController extends Controller
 
     public function index()
     {
-        $data = Enseignants::all();
+        $data = Enseignants::where('deleted_at',null)->orderBy('enseignant_id', 'desc')->get();
         return response()->json([
             'status' => 'success',
             'data' => $data,
@@ -41,7 +41,7 @@ class EnseignantsController extends Controller
             'matricule' => $request->matricule,
             'tel' => $request->tel,
         ]);
-
+        $history = (new HistoriquesController())->save('Creation','Cration',"Creation de l'esnseignant , id: $data->enseignant_id", $data->enseignant_id);
         return response()->json([
             'status' => 'success',
             'message' => 'Enseignant created successfully',
@@ -75,7 +75,7 @@ class EnseignantsController extends Controller
         $enseignant->matricule = $request->matricule;
         $enseignant->tel = $request->tel;
         $enseignant->save();
-
+        $history = (new HistoriquesController())->save('Modification','Enseignant',"Modification de l'esnseignant , id: $id",$id);
         return response()->json([
             'status' => 'success',
             'message' => 'Enseignant updated successfully',
@@ -86,8 +86,9 @@ class EnseignantsController extends Controller
     public function destroy($id)
     {
         $enseignant = Enseignants::find($id);
-        $enseignant->delete();
-
+        $enseignant->deleted_at = date('Y-m-d H:i:s');
+        $enseignant->save();
+        $history = (new HistoriquesController())->save('Suppression','Enseignant',"Suppression de l'esnseignant , id: $id",$id);
         return response()->json([
             'status' => 'success',
             'message' => 'Enseignant deleted successfully',

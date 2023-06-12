@@ -14,10 +14,14 @@ class CreateFilieresTable extends Migration
     public function up()
     {
         Schema::create('filieres', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('filiere_id');
+            $table->string('code_fil');
+            $table->string('intitule_fil');
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

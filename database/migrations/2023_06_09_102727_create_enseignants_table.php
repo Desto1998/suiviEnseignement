@@ -20,6 +20,7 @@ class CreateEnseignantsTable extends Migration
             $table->string('prenom');
             $table->string('tel');
             $table->string('email');
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }

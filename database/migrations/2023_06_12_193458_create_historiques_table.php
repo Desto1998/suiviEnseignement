@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMatieresTable extends Migration
+class CreateHistoriquesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,16 @@ class CreateMatieresTable extends Migration
      */
     public function up()
     {
-        Schema::create('matieres', function (Blueprint $table) {
-            $table->bigIncrements('matiere_id');
-            $table->string('code_mat');
-            $table->string('intitule_mat');
-            $table->unsignedBigInteger('filiere_id');
+        Schema::create('historiques', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('action');
+            $table->string('model');
+            $table->text('description');
+            $table->unsignedBigInteger('model_id');
+            $table->unsignedBigInteger('user_id');
             $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
-            $table->foreign('filiere_id')->references('filiere_id')->on('filieres')
+            $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
@@ -33,6 +35,6 @@ class CreateMatieresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('matieres');
+        Schema::dropIfExists('historiques');
     }
 }

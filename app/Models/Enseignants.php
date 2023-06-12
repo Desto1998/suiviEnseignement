@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Enseignants extends Model
 {
@@ -28,5 +29,18 @@ class Enseignants extends Model
         'prenom',
         'tel',
         'email',
+        'deleted_at',
     ];
+
+    public function programmers(): HasMany
+    {
+        return $this->hasMany(Programmer::class);
+    }
+
+    public function cours(): HasMany
+    {
+        return $this->hasMany(Cours::class);
+    }
+
+
 }

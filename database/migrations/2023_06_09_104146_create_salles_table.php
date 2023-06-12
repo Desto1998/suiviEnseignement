@@ -14,10 +14,16 @@ class CreateSallesTable extends Migration
     public function up()
     {
         Schema::create('salles', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('salle_id');
+            $table->string('numero');
+            $table->string('description');
+            $table->string('deleted_at');
             $table->timestamps();
         });
     }
+
+
+
 
     /**
      * Reverse the migrations.
