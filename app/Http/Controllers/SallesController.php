@@ -11,7 +11,7 @@ class SallesController extends Controller
 
     public function index()
     {
-        $data = Salles::where('delated_at', null)->orderBy('salle_id', 'desc')->get();
+        $data = Salles::where('deleted_at', null)->orderBy('salle_id', 'desc')->get();
         return response()->json([
             'status' => 'success',
             'data' => $data,
