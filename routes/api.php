@@ -59,7 +59,7 @@ Route::controller(FilieresController::class)->group(function () {
     Route::delete('filiere/{id}', 'destroy');
 });
 
-Route::controller(Matieres::class)->group(function () {
+Route::controller(\App\Http\Controllers\MatieresController::class)->group(function () {
     Route::get('matieres', 'index');
     Route::post('matiere', 'store');
     Route::get('matiere/{id}', 'show');
