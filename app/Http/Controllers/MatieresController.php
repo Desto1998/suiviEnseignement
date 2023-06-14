@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Matieres;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class MatieresController extends Controller
 {
@@ -11,30 +13,31 @@ class MatieresController extends Controller
 
     public function index()
     {
-        $data = Matieres::where('deleted_at', null)->orderBy('matiere_id', 'desc')->get();
-        return response()->json([
-            'status' => 'success',
-            'data' => $data,
-        ]);
+        try{
+            $data = Matieres::where('deleted_at', null)->orderBy('matiere_id', 'desc')->get();
+            return Response()->json(["message" =>"ok", "issues" => '', "success" => true, "data" => $data], 200);
+        } catch (Exception $e) {
+            return Response()->json(["message" =>"exception", "issues" => $e->getMessage(), "success" => false, "data" => null], 500);
+        }
+
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'code_mat' => 'required|int|max:20',
+        $validator = Validator::make($request->all() ,[
+            'code_mat' => 'required|string|max:20',
             'intitule_mat' => 'required|string|max:255',
             'filiere_id' => 'required',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
         $check = Matieres::where('code_mat',$request->code_mat)->get();
         if (count($check)) {
-            return response()->json([
-                'status' => 'Failled',
-                'message' => 'Une matiere avec ce code existe deja',
-                'data' => $request->code_mat,
-            ]);
+            return Response()->json(["message" =>"duplication", "issues" => 'Une matiere avec ce code existe deja', "success" => false, "data" => $request->code_mat], 500);
         }
         $data = Matieres::create([
-            'code_mat' => $request->code_fil,
+            'code_mat' => $request->code_mat,
             'intitule_mat' => $request->intitule_mat,
             'filiere_id' => $request->filiere_id,
         ]);
@@ -57,11 +60,14 @@ class MatieresController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'code_mat' => 'required|int|max:20',
+        $validator = Validator::make($request->all() ,[
+            'code_mat' => 'required|string|max:20',
             'intitule_mat' => 'required|string|max:255',
             'filiere_id' => 'required',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
 
         $check = Matieres::where('code_mat',$request->code_fil)->where('filiere_id','!=', $id)->get();
         if (count($check)) {

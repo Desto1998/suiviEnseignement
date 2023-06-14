@@ -7,6 +7,7 @@ use App\Http\Controllers\FilieresController;
 use App\Http\Controllers\HistoriquesController;
 use App\Http\Controllers\ProgrammerController;
 use App\Http\Controllers\SallesController;
+use App\Http\Controllers\MatieresController;
 use App\Http\Controllers\UserController;
 use App\Models\Matieres;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ Route::controller(FilieresController::class)->group(function () {
     Route::delete('filiere/{id}', 'destroy');
 });
 
-Route::controller(\App\Http\Controllers\MatieresController::class)->group(function () {
+Route::controller(MatieresController::class)->group(function () {
     Route::get('matieres', 'index');
     Route::post('matiere', 'store');
     Route::get('matiere/{id}', 'show');
