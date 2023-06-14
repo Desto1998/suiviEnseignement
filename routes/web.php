@@ -14,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    //return view('welcome');
+    return "<h1>APIs aplication de suivi des enseignements version 1.0</h1>";
 });

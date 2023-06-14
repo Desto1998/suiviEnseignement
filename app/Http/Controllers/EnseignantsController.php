@@ -68,7 +68,7 @@ class EnseignantsController extends Controller
             'tel' => 'required|max:255',
         ]);
 
-        $enseignant = User::find($id);
+        $enseignant = Enseignants::find($id);
         $enseignant->nom = $request->nom;
         $enseignant->email = $request->email;
         $enseignant->prenom = $request->prenom;

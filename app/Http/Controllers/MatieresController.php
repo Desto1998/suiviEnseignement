@@ -88,6 +88,13 @@ class MatieresController extends Controller
     public function destroy($id)
     {
         $matiere = Matieres::find($id);
+        if ($matiere == null) {
+            return response()->json([
+                'status' => 'Failled',
+                'message' => "Cette matiere n'existe pas",
+                'data' => $id,
+            ]);
+        }
         $matiere->deleted_at = date('Y-m-d H:i:s');
         $matiere->save();
 
