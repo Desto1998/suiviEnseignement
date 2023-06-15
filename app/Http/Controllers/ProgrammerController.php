@@ -7,6 +7,8 @@ use App\Models\Historiques;
 use App\Models\Matieres;
 use App\Models\Programmer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class ProgrammerController extends Controller
 {
@@ -22,26 +24,31 @@ class ProgrammerController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all() ,[
             'heure_debut' => 'required',
-            'description' => 'required|string|max:255',
             'heure_fin' => 'required',
+            'description' => 'required|string|max:255',
             'nombre_heure' => 'required',
             'date_passage' => 'required',
             'est_dispenser' => 'required',
-            'cours_id' => 'required',
+            //'salle_id ' => 'required|integer',
+            'cours_id' => 'required|integer',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
 
         $data = Programmer::create([
             'heure_debut' => $request->heure_debut,
             'heure_fin' => $request->heure_fin,
+            'description' => $request->description,
             'nombre_heure' => $request->nombre_heure,
             'date_passage' => $request->date_passage,
             'est_dispenser' => 0,
             'cours_id' => $request->cours_id,
             'salle_id' => $request->salle_id,
         ]);
-        $history = (new HistoriquesController())->save('Creation','Programmer',"Programmation du cours, id: $data->programmer_id",$data->programmer_id);
+        $history = HistoriquesController::save('Creation','Programmer',"Programmation du cours",$data->programmer_id, Auth::user()->id);
         return response()->json([
             'status' => 'success',
             'message' => 'Programmer created successfully',
@@ -60,15 +67,19 @@ class ProgrammerController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all() ,[
             'heure_debut' => 'required',
+            'description' => 'required|string|max:255',
             'heure_fin' => 'required',
             'nombre_heure' => 'required',
             'date_passage' => 'required',
             'est_dispenser' => 'required',
-            'cours_id' => 'required',
-            'salle_id' => 'required',
+            'cours_id' => 'required|integer',
+            //'salle_id' => 'required|integer',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
 
         $data = Programmer::find($id);
         $data->heure_debut = $request->heure_debut;
@@ -80,7 +91,7 @@ class ProgrammerController extends Controller
         $data->cours_id = $request->cours_id;
         $data->salle_id = $request->salle_id;
         $data->save();
-        $history = (new HistoriquesController())->save('Modification','Programmer',"Modification du cours programmer, id: $data->programmer_id",$id);
+        $history = HistoriquesController::save('Modification','Programmer',"Modification du cours programmer",$id, Auth::user()->id);
         return response()->json([
             'status' => 'success',
             'message' => 'Modifier',
@@ -93,7 +104,7 @@ class ProgrammerController extends Controller
         $programmer = Programmer::find($id);
         $programmer->deleted_at = date('Y-m-d H:i:s');
         $programmer->save();
-        $history = (new HistoriquesController())->save('Suppression','Programmer',"Suppression du cours programmer, id: $id",$id);
+        $history = HistoriquesController::save('Suppression','Programmer',"Suppression du cours programmer",$id, Auth::user()->id);
         return response()->json([
             'status' => 'success',
             'message' => 'supprimee avec success',

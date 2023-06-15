@@ -17,7 +17,7 @@ class CreateSallesTable extends Migration
             $table->bigIncrements('salle_id');
             $table->string('numero');
             $table->string('description');
-            $table->string('deleted_at');
+            $table->string('deleted_at')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use App\Models\Enseignants;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class EnseignantsController extends Controller
 {
@@ -26,13 +27,16 @@ class EnseignantsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all() ,[
             'nom' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'matricule' => 'required|string|max:255',
             'tel' => 'required|max:255',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
 
         $data = Enseignants::create([
             'nom' => $request->nom,
@@ -41,7 +45,7 @@ class EnseignantsController extends Controller
             'matricule' => $request->matricule,
             'tel' => $request->tel,
         ]);
-        $history = (new HistoriquesController())->save('Creation','Cration',"Creation de l'esnseignant , id: $data->enseignant_id", $data->enseignant_id);
+        $history = HistoriquesController::save('Creation','Cration',"Creation de l'esnseignant", $data->enseignant_id, Auth::user()->id);
         return response()->json([
             'status' => 'success',
             'message' => 'Enseignant created successfully',
@@ -60,13 +64,16 @@ class EnseignantsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all() ,[
             'nom' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'matricule' => 'required|string|max:255',
             'tel' => 'required|max:255',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
 
         $enseignant = Enseignants::find($id);
         $enseignant->nom = $request->nom;
@@ -75,7 +82,7 @@ class EnseignantsController extends Controller
         $enseignant->matricule = $request->matricule;
         $enseignant->tel = $request->tel;
         $enseignant->save();
-        $history = (new HistoriquesController())->save('Modification','Enseignant',"Modification de l'esnseignant , id: $id",$id);
+        $history = HistoriquesController::save('Modification','Enseignant',"Modification de l'esnseignant",$id, Auth::user()->id);
         return response()->json([
             'status' => 'success',
             'message' => 'Enseignant updated successfully',
@@ -88,7 +95,7 @@ class EnseignantsController extends Controller
         $enseignant = Enseignants::find($id);
         $enseignant->deleted_at = date('Y-m-d H:i:s');
         $enseignant->save();
-        $history = (new HistoriquesController())->save('Suppression','Enseignant',"Suppression de l'esnseignant , id: $id",$id);
+        $history = HistoriquesController::save('Suppression','Enseignant',"Suppression de l'esnseignant",$id, Auth::user()->id);
         return response()->json([
             'status' => 'success',
             'message' => 'Enseignant deleted successfully',

@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class HistoriquesController extends Controller
 {
-    //
 
-
-    public function list(){
+    public function index(){
        $data = Historiques::where('deleted_at',null)->orderBy('id', 'desc')->get();
         return response()->json([
             'status' => 'success',
@@ -19,13 +17,13 @@ class HistoriquesController extends Controller
         ]);
     }
 
-    public function save($action, $model,$description,$id){
+    public static function save($action, $model, $description, $model_id, $user_id){
         $save = Historiques::create([
             'action' => $action,
             'model' => $model,
             'description' => $description,
-            'model_id' => $id,
-            'user_id' => Auth::user()->id,
+            'model_id' => $model_id,
+            'user_id' => $user_id,
         ]);
         return $save;
     }

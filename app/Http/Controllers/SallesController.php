@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Salles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SallesController extends Controller
 {
@@ -20,10 +21,13 @@ class SallesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'numero' => 'required|int|max:20',
+        $validator = Validator::make($request->all() ,[
+            'numero' => 'required|string|max:20',
             'description' => 'required|string|max:255',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
         $check = Salles::where('numero',$request->numero)->get();
         if (count($check)) {
             return response()->json([
@@ -55,10 +59,13 @@ class SallesController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'numero' => 'required|int|max:20',
+        $validator = Validator::make($request->all() ,[
+            'numero' => 'required|string|max:20',
             'description' => 'required|string|max:255',
         ]);
+        if ($validator->fails()) {
+            return Response()->json(["message" =>"validation", "issues" =>$validator->errors(), "success" => false, "data" => null], 500);
+        }
 
         $check = Salles::where('numero',$request->numero)->where('salle_id','!=', $id)->get();
         if (count($check)) {
